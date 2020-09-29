@@ -1,0 +1,15 @@
+@import "./const.scss";
+@mixin positionMiddle {
+  // 已知宽高
+  position: absolute;
+  margin: auto;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  top: 0;
+}
+@mixin flexMiddle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,0 +1,21 @@
+.el-dropdown-menu__item {
+  font-size: 12px;
+  line-height: 28px;
+}
+.el-button--cyan {
+  background-color: #20b2aa;
+  border-color: #20b2aa;
+  color: #ffffff;
+}
+.el-button--cyan:focus,
+.el-button--cyan:hover {
+  background: #48d1cc;
+  border-color: #48d1cc;
+  color: #ffffff;
+}
+// .el-scrollbar__bar.is-vertical {
+//   opacity: 0.8;
+// }
+.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
+  background-color: #cce4ff;
+}

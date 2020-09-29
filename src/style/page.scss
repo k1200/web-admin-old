@@ -1,0 +1,56 @@
+.page-header {
+  z-index: 9;
+}
+
+.page-container {
+  height: calc(100% - 64px);
+}
+.main-header {
+  height: 40px !important;
+  line-height: 40px;
+  padding: 0;
+}
+
+#page-main {
+  background-color: #f0f2f5;
+  padding: 12px 8px 5px;
+}
+
+#main-scrollbar {
+  border-radius: 5px;
+  overflow: hidden;
+  height: 100%;
+  background: #fff;
+  padding: 5px;
+}
+
+#components {
+  background-color: #fff;
+}
+
+#page-footer {
+  height: 24px !important;
+  line-height: 24px;
+  font-size: 12px;
+  background-color: #fff;
+}
+
+.page-aside {
+  overflow: initial;
+  transition: 0.8s width;
+}
+
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.5s;
+}
+.page-enter,
+.page-leave-active {
+  opacity: 0;
+}
+.page-scrollbar-hidden-x,
+.page-scrollbar-hidden-y {
+  .el-scrollbar__wrap {
+    overflow-x: hidden;
+  }
+}

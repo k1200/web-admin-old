@@ -1,0 +1,5 @@
+tapi: 表格api片段
+vrouter： 路由片段
+fdec：文件头注释
+notehtml： html模板分割线
+hsn： VUE文件中 templat 与 javascript 分割线
