@@ -1,6 +1,10 @@
 <template>
   <div class="container-top">
-    <top-left class="header-top" v-on="$listeners" />
+    <top-left
+      class="header-top"
+      :is-collapse="$attrs.isCollapse"
+      v-on="$listeners"
+    />
     <top-title />
     <top-right />
   </div>

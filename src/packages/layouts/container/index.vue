@@ -1,7 +1,10 @@
 <template>
   <el-container class="body-container">
     <el-header class="page-header">
-      <page-header @collapse-change="fn_change__collapse" />
+      <page-header
+        @collapse-change="fn_change__collapse"
+        :isCollapse="isCollapse"
+      />
     </el-header>
     <el-container class="page-container">
       <el-aside
@@ -66,7 +69,6 @@ export default {
       this.isCollapse = !this.isCollapse;
     },
     fn_click__close() {
-      console.log(6969696969);
       this.isCollapse = false;
     }
   },

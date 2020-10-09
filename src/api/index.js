@@ -12,7 +12,12 @@ import 'nprogress/nprogress.css'; // progress bar style
 import { Base64 } from 'js-base64';
 import website from '@/conf/website';
 import { baseUrl } from '@/conf/env';
-import { fn_token__get, fn_token__remove } from '@/util/token';
+import {
+  fn_token__get,
+  fn_refreshToken__get,
+  fn_token__remove
+} from '@/util/token';
+import { fn_api__handle__auth_oauth_refresh_token } from '@/api/login';
 
 axios.defaults.timeout = 600000;
 //返回其他状态吗
@@ -55,6 +60,7 @@ axios.interceptors.response.use(
       fn_token__remove();
       NProgress.done();
       if (res.status === 401) {
+        fn_api__handle__auth_oauth_refresh_token(fn_refreshToken__get());
         Message({
           message: '未授权',
           type: 'error'

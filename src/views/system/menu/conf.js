@@ -73,10 +73,15 @@ export default {
     // 获取数据
     async fn_handle__get_list(form = this.query_params) {
       this.loading = true;
-      fn_api__system_menu_list(this.fn_format__reqdata(form)).then(res => {
-        this.tableData = this.fn_format__resdata(res.data);
-        this.loading = false;
-      });
+      fn_api__system_menu_list(this.fn_format__reqdata(form))
+        .then(res => {
+          this.tableData = this.fn_format__resdata(res.data);
+          this.loading = false;
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.loading = false;
+        });
     },
     // 格式化请求参数
     fn_format__reqdata(form) {
@@ -128,6 +133,7 @@ export default {
         .then(() => {
           fn_api__system_menu_del(row.menuId).then(res => {
             if (+res.code === 200) {
+              this.fn_handle__get_list();
               this.$message.success('删除成功!');
             }
           });

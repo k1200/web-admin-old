@@ -1,11 +1,15 @@
 import {
-  fn_api__system_post_list,
-  fn_api__system_post_del,
-  fn_api__system_post_update,
-  fn_api__system_post_save
-} from '@/api/system/post';
+  fn_api__system_dict_data_save,
+  fn_api__system_dict_data_del,
+  fn_api__system_dict_data_update,
+  fn_api__system_dict_data_list
+} from '@/api/system/dict/data';
+import {
+  fn_api__system_dict_type_desc,
+  fn_api__system_dict_type_list
+} from '@/api/system/dict/type';
 export default {
-  name: 'PostTable',
+  name: 'DictData',
   components: {},
   computed: {
     // 获取多选表格选中的数据
@@ -32,10 +36,10 @@ export default {
       size: 'small',
       // 是否显示弹出层
       dialog_visible: false,
-      // 查询参数（搜索表单）
+      // 查询参数
       query_params: {
-        postCode: '',
-        postName: '',
+        dictName: '',
+        dictType: '',
         status: ''
       },
       // 分页参数
@@ -45,8 +49,9 @@ export default {
         pageSize: 10,
         pageSizes: [10, 20, 50, 80]
       },
-      tableData: [], // 表格数据
-      // 选择框字典
+      tableData: [],
+      type_dict: [],
+      // 状态数据字典
       status_dict: [
         {
           label: '正常',
@@ -59,29 +64,25 @@ export default {
       ],
       submit_loading: false, // 弹窗表单提交按钮loading
       // 弹窗表单
-      form: {
-        postName: '',
-        postCode: '',
-        postSort: '',
-        status: '',
-        remark: ''
-      },
-      // 弹窗表单校验规则
+      form: {},
+      // 表单校验
       rules: {
-        postName: [
-          { required: true, message: '岗位名称不能为空', trigger: 'blur' }
+        dictLabel: [
+          { required: true, message: '数据标签不能为空', trigger: 'blur' }
         ],
-        postCode: [
-          { required: true, message: '岗位编码不能为空', trigger: 'blur' }
+        dictValue: [
+          { required: true, message: '数据键值不能为空', trigger: 'blur' }
         ],
-        postSort: [
-          { required: true, message: '岗位顺序不能为空', trigger: 'blur' }
+        dictSort: [
+          { required: true, message: '数据顺序不能为空', trigger: 'blur' }
         ]
       }
     };
   },
   created() {
-    this.fn_handle__get_list();
+    const dictId = this.$route.params && this.$route.params.dictId;
+    this.fn_get__type(dictId);
+    this.fn_get__type_list();
   },
   mounted() {
     this.ref_table = this.$refs.table;
@@ -91,19 +92,15 @@ export default {
     // 获取数据
     async fn_handle__get_list(form = this.query_params) {
       this.loading = true;
-      new Promise(resolve => {
-        fn_api__system_post_list(this.fn_format__reqdata(form))
-          .then(res => {
-            this.tableData = this.fn_format__resdata(res);
-            this.loading = false;
-            resolve();
-          })
-          .catch(() => {
-            this.tableData = [];
-            this.loading = false;
-            resolve();
-          });
-      });
+      fn_api__system_dict_data_list(this.fn_format__reqdata(form))
+        .then(res => {
+          this.tableData = this.fn_format__resdata(res);
+          this.loading = false;
+        })
+        .catch(e => {
+          this.tableData = [];
+          this.loading = false;
+        });
     },
     // 格式化请求参数
     fn_format__reqdata(form) {
@@ -117,7 +114,20 @@ export default {
       this.page.total = data.total;
       return data.rows;
     },
-
+    /** 查询字典类型详细 */
+    fn_get__type(dictId) {
+      fn_api__system_dict_type_desc(dictId).then(res => {
+        this.query_params.dictType = res.data.dictType;
+        this.defaultDictType = res.data.dictType;
+        this.fn_handle__get_list();
+      });
+    },
+    /** 查询字典类型列表 */
+    fn_get__type_list() {
+      fn_api__system_dict_type_list().then(res => {
+        this.type_dict = res.rows;
+      });
+    },
     // 搜索数据
     fn_handle__query_list() {
       this.page.currentPage = 1;
@@ -126,8 +136,8 @@ export default {
     // 重置搜索条件
     fn_click__reset_search() {
       this.query_params = {
-        postCode: '',
-        postName: '',
+        dictName: '',
+        dictType: '',
         status: ''
       };
       this.page.currentPage = 1;
@@ -158,55 +168,64 @@ export default {
       this.form = { ...row };
       this.dialog_visible = true;
     },
+
     // 删除数据
-    fn_click__del(ids) {
-      console.log(ids);
-      if (typeof ids !== 'string' && ids.length === 0) {
-        return this.$message.warning('请至少选择一条数据！');
+    fn_click__del(dictCode) {
+      if (Object.prototype.toString.call(dictCode) === '[object Array]') {
+        dictCode = dictCode.map(item => item.dictCode).toString();
       }
-      ids = ids.toString();
-      this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        closeOnClickModal: false,
-        closeOnPressEscape: false,
-        type: 'warning'
-      })
-        .then(() => {
-          fn_api__system_post_del(ids)
-            .then(res => {
+      if (dictCode || dictCode === 0) {
+        this.$confirm(
+          `此操作将删除字典编码为${dictCode}的数据, 是否继续?`,
+          '提示',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            closeOnClickModal: false,
+            closeOnPressEscape: false,
+            type: 'warning'
+          }
+        )
+          .then(() => {
+            fn_api__system_dict_data_del(dictCode).then(res => {
               if (res.code === 200) {
                 this.fn_handle__get_list();
                 this.$message.success('删除成功!');
               }
-            })
-            .catch(e => {
-              console.log(e);
             });
-        })
-        .catch(() => {
-          this.$message.info('已取消删除');
-        });
+          })
+          .catch(() => {
+            this.$message.info('已取消删除！');
+          });
+      } else {
+        this.$message.warning('请至少选择一条数据!');
+      }
     },
 
     // 用于多选表格，清空用户的选择
     fn_click__clear_selection() {
       this.ref_table.clearSelection();
     },
-
     // 关闭弹窗
     fn_handle__close() {
       this.fn_click__cancel_form();
     },
 
+    // 取消弹窗表单
+    fn_click__cancel_form() {
+      this.dialog_visible = false;
+      this.form = {};
+    },
     // 提交弹窗表单数据
     fn_click__submit_form() {
-      this.submit_loading = true;
       this.$refs.form.validate(valid => {
         if (valid) {
-          let [fn_submit, message] = [fn_api__system_post_save, '新增成功！'];
-          if (this.form.deptId) {
-            fn_submit = fn_api__system_post_update;
+          let [fn_submit, message] = [
+            fn_api__system_dict_data_save,
+            '新增成功！'
+          ];
+          if (this.form.dictId) {
+            fn_submit = fn_api__system_dict_data_update;
             message = '修改成功！';
           }
           fn_submit(this.form).then(async res => {
@@ -224,11 +243,6 @@ export default {
           return false;
         }
       });
-    },
-    // 取消弹窗表单
-    fn_click__cancel_form() {
-      this.dialog_visible = false;
-      this.form = {};
     },
     // 格式化 状态
     fn_formatter__status(row, column, cellValue) {

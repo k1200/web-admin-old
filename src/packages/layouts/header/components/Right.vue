@@ -1,5 +1,6 @@
 <template>
   <div class="top-right">
+    <!-- <search></search> -->
     <i
       v-if="message"
       class="el-icon-message"
@@ -41,10 +42,14 @@
 import { mapGetters } from 'vuex';
 import { MUTATIONS_TAG__CLEARALL } from '@/store/mutations_type';
 import website from '@/conf/website';
+import Search from './Search';
 export default {
   name: 'TopRight',
   data() {
     return {};
+  },
+  components: {
+    Search
   },
   computed: {
     ...mapGetters(['userInfo']),

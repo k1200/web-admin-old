@@ -8,19 +8,20 @@
         :fn-reset-form="fn_click__reset_search"
       >
         <template #default="{submit}">
-          <el-form-item label="字典名称" prop="dictName">
-            <el-input
-              v-model="query_params.dictName"
-              placeholder="请输入字典名称"
-              clearable
-              size="small"
-              @keyup.enter.native="submit"
-            />
+          <el-form-item label="字典名称" prop="dictType">
+            <el-select v-model="query_params.dictType" size="small">
+              <el-option
+                v-for="item in type_dict"
+                :key="item.dictId"
+                :label="item.dictName"
+                :value="item.dictType"
+              />
+            </el-select>
           </el-form-item>
-          <el-form-item label="字典类型" prop="dictType">
+          <el-form-item label="字典标签" prop="dictLabel">
             <el-input
-              v-model="query_params.dictType"
-              placeholder="请输入字典类型"
+              v-model="query_params.dictLabel"
+              placeholder="请输入字典标签"
               clearable
               size="small"
               @keyup.enter.native="submit"
@@ -41,18 +42,6 @@
                 :value="dict.value"
               />
             </el-select>
-          </el-form-item>
-          <el-form-item label="创建时间">
-            <el-date-picker
-              v-model="query_params.dateRange"
-              size="small"
-              style="width: 240px"
-              value-format="yyyy-MM-dd"
-              type="daterange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            ></el-date-picker>
           </el-form-item>
         </template>
       </searchbar>
@@ -89,27 +78,10 @@
         <el-table-column type="selection" width="55" fixed align="center">
         </el-table-column>
 
-        <el-table-column label="字典编号" align="center" prop="dictId" />
-        <el-table-column
-          label="字典名称"
-          align="center"
-          prop="dictName"
-          :show-overflow-tooltip="true"
-        />
-        <el-table-column
-          label="字典类型"
-          align="center"
-          :show-overflow-tooltip="true"
-        >
-          <template #default="{row}">
-            <router-link
-              :to="'/dict/type/data/' + row.dictId"
-              class="link-type"
-            >
-              <span>{{ row.dictType }}</span>
-            </router-link>
-          </template>
-        </el-table-column>
+        <el-table-column label="字典编码" align="center" prop="dictCode" />
+        <el-table-column label="字典标签" align="center" prop="dictLabel" />
+        <el-table-column label="字典键值" align="center" prop="dictValue" />
+        <el-table-column label="字典排序" align="center" prop="dictSort" />
         <el-table-column
           label="状态"
           align="center"
@@ -143,7 +115,7 @@
               type="text"
               size="mini"
               v-permission="c__permission.del_btn"
-              @click="fn_click__del(row.dictId)"
+              @click="fn_click__del(row.dictCode)"
               >删除</el-button
             >
           </template>
@@ -163,11 +135,21 @@
       @close="fn_handle__close"
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="字典名称" prop="dictName">
-          <el-input v-model="form.dictName" placeholder="请输入字典名称" />
+        <el-form-item label="字典类型">
+          <el-input v-model="form.dictType" disabled />
         </el-form-item>
-        <el-form-item label="字典类型" prop="dictType">
-          <el-input v-model="form.dictType" placeholder="请输入字典类型" />
+        <el-form-item label="数据标签" prop="dictLabel">
+          <el-input v-model="form.dictLabel" placeholder="请输入数据标签" />
+        </el-form-item>
+        <el-form-item label="数据键值" prop="dictValue">
+          <el-input v-model="form.dictValue" placeholder="请输入数据键值" />
+        </el-form-item>
+        <el-form-item label="显示排序" prop="dictSort">
+          <el-input-number
+            v-model="form.dictSort"
+            controls-position="right"
+            :min="0"
+          />
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">

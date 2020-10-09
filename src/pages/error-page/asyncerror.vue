@@ -33,18 +33,32 @@ export default {
     };
   },
   beforeRouteLeave(to, form, next) {
-    console.log(to);
     clearInterval(this.timeIndex);
     next();
   },
   created() {
-    this.timeIndex = setInterval(() => {
-      this.downTime--;
-      if (this.downTime === 0) {
-        clearInterval(this.timeIndex);
-        this.$router.replace('/');
-      }
-    }, 1000);
+    this.fn_setInterval();
+  },
+  methods: {
+    fn_setInterval() {
+      this.timeIndex = setInterval(() => {
+        this.downTime--;
+        if (this.downTime === 0) {
+          clearInterval(this.timeIndex);
+          this.$router.replace('/');
+        }
+      }, 1000);
+    },
+    fn_reset() {
+      this.downTime = 10;
+      clearInterval(this.timeIndex);
+      this.fn_setInterval();
+    }
+  },
+  watch: {
+    $route() {
+      this.fn_reset();
+    }
   }
 };
 </script>

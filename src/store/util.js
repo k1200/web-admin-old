@@ -107,7 +107,7 @@ const fn_format__router = (router, route = [], menu = []) => {
         route.push(temp_route);
       }
     }
-    if (temp_menu) {
+    if (temp_menu && !router.hidden) {
       menu.push(temp_menu);
     }
   }

@@ -79,8 +79,9 @@ const tags = {
         const index = state.tags.findIndex(item => item.path === val.path);
         commit(MUTATIONS_TAG__CLOSE, index);
         if (val.path === state.active_router.path) {
-          dispatch('fn_a_tag__active', state.tags[index - 1] || null); // 关闭的是活动tag, 活动tag向前移
-          router.push(state.tags[index - 1].path || null).catch(error => error);
+          let prev_tag = state.tags[index - 1] || null;
+          dispatch('fn_a_tag__active', prev_tag); // 关闭的是活动tag, 活动tag向前移
+          router.push(prev_tag ? prev_tag.path : '/').catch(error => error);
         }
         fn_storage__set({ name: 'tags', content: state.tags });
         resolve();

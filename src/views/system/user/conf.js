@@ -249,6 +249,7 @@ export default {
           .then(() => {
             fn_api__system_user_del(userIds).then(res => {
               if (res.code === 200) {
+                this.fn_handle__get_list();
                 this.$message.success('删除成功!');
               }
             });

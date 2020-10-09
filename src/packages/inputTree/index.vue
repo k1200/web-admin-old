@@ -6,6 +6,7 @@
     :placeholder="placeholder"
     @blur="fn_autocomplete_blur"
     @focus="fn_autocomplete_focus"
+    :trigger-on-focus="triggerOnFocus"
     :size="size"
     ref="autocomplete"
     style="width: 100%"
@@ -49,7 +50,6 @@ export default {
       }
     },
     value: {
-      required: true,
       type: [String, Number],
       default: ''
     },
@@ -65,6 +65,10 @@ export default {
     size: {
       type: String,
       default: 'small'
+    },
+    triggerOnFocus: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {

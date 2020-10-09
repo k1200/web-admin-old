@@ -1,4 +1,4 @@
-import request from './index';
+import request from '../../index';
 
 /**
  * @desc 查询字典类型列表

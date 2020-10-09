@@ -9,9 +9,9 @@
     />
     <span class="top-left__title" v-if="!showCollapse">{{ title }}</span>
     <i
-      class="el-icon-s-fold"
+      class="top_fold"
+      :class="isCollapse ? 'el-icon-s-unfold' : 'el-icon-s-fold'"
       @click.stop="setCollapse"
-      style="font-size: 18px;cursor: pointer"
     ></i>
   </div>
 </template>
@@ -20,6 +20,9 @@
 import website from '@/conf/website';
 export default {
   name: 'TopLeft',
+  props: {
+    isCollapse: Boolean
+  },
   computed: {
     title() {
       return website.title;
@@ -27,8 +30,7 @@ export default {
   },
   data() {
     return {
-      showCollapse: false,
-      isCollapse: false
+      showCollapse: false
     };
   },
   methods: {
@@ -52,5 +54,9 @@ export default {
   font-size: 16px;
   cursor: default;
   margin-right: 5px;
+}
+.top_fold {
+  font-size: 24px;
+  cursor: pointer;
 }
 </style>

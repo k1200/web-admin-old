@@ -194,6 +194,12 @@
           >
             <el-input v-model="form.component" placeholder="请输入组件路径" />
           </el-form-item>
+          <el-form-item v-if="form.menuType != 'F'" label="显示状态">
+            <el-radio-group v-model="form.visible">
+              <el-radio label="0">正常</el-radio>
+              <el-radio label="1">隐藏</el-radio>
+            </el-radio-group>
+          </el-form-item>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
